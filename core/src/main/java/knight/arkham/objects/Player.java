@@ -35,7 +35,7 @@ public class Player extends GameObject {
     public Player(Rectangle bounds, World world, TextureAtlas atlas) {
         super(
             bounds, world,
-            new TextureRegion(atlas.findRegion("idle"), 0, 0, 60, 60)
+            new TextureRegion(atlas.findRegion("idle"), 0, 0, 58, 50)
         );
 
         previousState = AnimationState.STANDING;
