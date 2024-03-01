@@ -109,7 +109,7 @@ public class TileMapHelper {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4))
             camera.zoom -= 0.1f;
 
-        camera.position.set(player.getWorldPosition().x, 5.2f, 0);
+        camera.position.set(player.getWorldPosition().x, 4.5f, 0);
 
         camera.update();
     }

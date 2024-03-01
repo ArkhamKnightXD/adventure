@@ -35,17 +35,17 @@ public class Player extends GameObject {
     public Player(Rectangle bounds, World world, TextureAtlas atlas) {
         super(
             bounds, world,
-            new TextureRegion(atlas.findRegion("smoking"), 0, 0, 16, 22)
+            new TextureRegion(atlas.findRegion("idle"), 0, 0, 60, 60)
         );
 
         previousState = AnimationState.STANDING;
         actualState = AnimationState.STANDING;
 
-        jumpingRegion = new TextureRegion(atlas.findRegion("jumping"), 0, 0, 16, 22);
+        jumpingRegion = new TextureRegion(atlas.findRegion("idle"), 0, 0, 32, 32);
 
-        standingAnimation = makeAnimationByRegion(atlas.findRegion("smoking"), 6, 0.2f);
-        runningAnimation = makeAnimationByRegion(atlas.findRegion("walking"), 8, 0.1f);
-        dyingAnimation = makeAnimationByRegion(atlas.findRegion("dying"), 8, 0.1f);
+        standingAnimation = makeAnimationByRegion(atlas.findRegion("idle"), 4, 0.2f);
+        runningAnimation = makeAnimationByRegion(atlas.findRegion("Run-Sheet"), 8, 0.1f);
+        dyingAnimation = makeAnimationByRegion(atlas.findRegion("Dead-Sheet"), 8, 0.1f);
 
         jumpSound = loadSound("magic.wav");
         deathSound = loadSound("fall.wav");
