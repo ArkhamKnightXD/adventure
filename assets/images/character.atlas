@@ -1,11 +1,11 @@
 character.png
-size:1024,256
+size:2048,128
 repeat:none
 Attack-01-Sheet
-bounds:2,150,768,80
+bounds:2,38,768,80
 Dead-Sheet
-bounds:2,2,640,64
-Run-Sheet
-bounds:2,68,640,80
+bounds:772,54,640,64
 idle
-bounds:772,180,228,50
+bounds:1414,67,256,51
+run
+bounds:772,2,640,50

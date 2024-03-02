@@ -31,6 +31,7 @@ public class TileMapHelper {
     private final Player player;
     private final Array<GameObject> gameObjects;
     private float accumulator;
+    private boolean isDebugCamera;
 
     public TileMapHelper(String mapFilePath, String atlasFilePath) {
 
@@ -109,7 +110,11 @@ public class TileMapHelper {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4))
             camera.zoom -= 0.1f;
 
-        camera.position.set(player.getWorldPosition().x, 4.5f, 0);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F5))
+            isDebugCamera = !isDebugCamera;
+
+        if (!isDebugCamera)
+            camera.position.set(player.getWorldPosition().x, 3.4f, 0);
 
         camera.update();
     }
