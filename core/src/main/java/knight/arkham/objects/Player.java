@@ -10,10 +10,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import knight.arkham.helpers.AnimationBody;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.helpers.GameDataHelper;
 
+import static knight.arkham.helpers.AnimationHelper.makeAnimation;
 import static knight.arkham.helpers.AssetsHelper.loadSound;
 import static knight.arkham.helpers.Box2DHelper.createBody;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
@@ -22,7 +22,7 @@ public class Player extends GameObject {
     private enum AnimationState {FALLING, JUMPING, STANDING, RUNNING, DYING, ATTACKING}
     private AnimationState actualState;
     private AnimationState previousState;
-    private final Animation<TextureRegion> standingAnimation;
+    private final Animation<TextureRegion> idleAnimation;
     private final Animation<TextureRegion> attackingAnimation;
     private final Animation<TextureRegion> jumpAnimation;
     private final Animation<TextureRegion> runningAnimation;
@@ -43,17 +43,11 @@ public class Player extends GameObject {
         previousState = AnimationState.STANDING;
         actualState = AnimationState.STANDING;
 
-        var idleAnimationBody = new AnimationBody(atlas.findRegion("idle"), 64, 50, 4, 0.2f);
-        var runAnimationBody = new AnimationBody(atlas.findRegion("run"), 80, 50, 8, 0.2f);
-        var deathAnimationBody = new AnimationBody(atlas.findRegion("dead"), 80, 55, 8, 0.2f);
-        var jumpAnimationBody = new AnimationBody(atlas.findRegion("jump"), 64, 64, 15, 0.1f);
-        var attackAnimationBody = new AnimationBody(atlas.findRegion("attack"), 96, 80, 8, 0.1f);
-
-        jumpAnimation = jumpAnimationBody.getAnimation();
-        standingAnimation = idleAnimationBody.getAnimation();
-        runningAnimation = runAnimationBody.getAnimation();
-        dyingAnimation = deathAnimationBody.getAnimation();
-        attackingAnimation = attackAnimationBody.getAnimation();
+        jumpAnimation = makeAnimation(atlas.findRegion("jump"), 64, 64, 15, 0.1f);
+        idleAnimation = makeAnimation(atlas.findRegion("idle"), 64, 50, 4, 0.2f);
+        runningAnimation = makeAnimation(atlas.findRegion("run"), 80, 50, 8, 0.2f);
+        dyingAnimation = makeAnimation(atlas.findRegion("dead"), 80, 55, 8, 0.2f);
+        attackingAnimation = makeAnimation(atlas.findRegion("attack"), 96, 80, 8, 0.1f);
 
         jumpSound = loadSound("magic.wav");
         deathSound = loadSound("fall.wav");
@@ -167,7 +161,7 @@ public class Player extends GameObject {
             case FALLING:
             case STANDING:
             default:
-                actualRegion = standingAnimation.getKeyFrame(animationTimer, true);
+                actualRegion = idleAnimation.getKeyFrame(animationTimer, true);
         }
 
         flipRegionOnXAxis(actualRegion);
