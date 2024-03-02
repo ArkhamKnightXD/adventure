@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import knight.arkham.helpers.AnimationBody;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.helpers.GameDataHelper;
 
@@ -18,11 +19,12 @@ import static knight.arkham.helpers.Box2DHelper.createBody;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class Player extends GameObject {
-    private enum AnimationState {FALLING, JUMPING, STANDING, RUNNING, DYING}
+    private enum AnimationState {FALLING, JUMPING, STANDING, RUNNING, DYING, ATTACKING}
     private AnimationState actualState;
     private AnimationState previousState;
-    private final TextureRegion jumpingRegion;
     private final Animation<TextureRegion> standingAnimation;
+    private final Animation<TextureRegion> attackingAnimation;
+    private final Animation<TextureRegion> jumpAnimation;
     private final Animation<TextureRegion> runningAnimation;
     private final Animation<TextureRegion> dyingAnimation;
     private float animationTimer;
@@ -41,11 +43,17 @@ public class Player extends GameObject {
         previousState = AnimationState.STANDING;
         actualState = AnimationState.STANDING;
 
-        jumpingRegion = new TextureRegion(atlas.findRegion("idle"), 0, 0, 32, 32);
+        var idleAnimationBody = new AnimationBody(atlas.findRegion("idle"), 64, 50, 4, 0.2f);
+        var runAnimationBody = new AnimationBody(atlas.findRegion("run"), 80, 50, 8, 0.2f);
+        var deathAnimationBody = new AnimationBody(atlas.findRegion("dead"), 80, 55, 8, 0.2f);
+        var jumpAnimationBody = new AnimationBody(atlas.findRegion("jump"), 64, 64, 15, 0.1f);
+        var attackAnimationBody = new AnimationBody(atlas.findRegion("attack"), 96, 80, 8, 0.1f);
 
-        standingAnimation = makeAnimationByRegion(atlas.findRegion("idle"), 4, 0.2f);
-        runningAnimation = makeAnimationByRegion(atlas.findRegion("run"), 8, 0.1f);
-        dyingAnimation = makeAnimationByRegion(atlas.findRegion("Dead-Sheet"), 8, 0.1f);
+        jumpAnimation = jumpAnimationBody.getAnimation();
+        standingAnimation = idleAnimationBody.getAnimation();
+        runningAnimation = runAnimationBody.getAnimation();
+        dyingAnimation = deathAnimationBody.getAnimation();
+        attackingAnimation = attackAnimationBody.getAnimation();
 
         jumpSound = loadSound("magic.wav");
         deathSound = loadSound("fall.wav");
@@ -69,7 +77,7 @@ public class Player extends GameObject {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && body.getLinearVelocity().y == 0) {
 
-            applyLinealImpulse(new Vector2(0, 140));
+            applyLinealImpulse(new Vector2(0, 120));
             jumpSound.play();
         }
     }
@@ -85,7 +93,7 @@ public class Player extends GameObject {
 
             deadTimer += deltaTime;
 
-            if (deadTimer >= 1) {
+            if (deadTimer >= 4) {
 
                 isDead = false;
                 deadTimer = 0;
@@ -124,6 +132,9 @@ public class Player extends GameObject {
         else if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D))
             return AnimationState.RUNNING;
 
+        else if (Gdx.input.isKeyPressed(Input.Keys.F))
+            return AnimationState.ATTACKING;
+
         else if (body.getLinearVelocity().y < 0)
             return AnimationState.FALLING;
 
@@ -138,7 +149,7 @@ public class Player extends GameObject {
         switch (actualState) {
 
             case JUMPING:
-                actualRegion = jumpingRegion;
+                actualRegion = jumpAnimation.getKeyFrame(animationTimer, false);
                 break;
 
             case RUNNING:
@@ -147,6 +158,10 @@ public class Player extends GameObject {
 
             case DYING:
                 actualRegion = dyingAnimation.getKeyFrame(animationTimer, false);
+                break;
+
+            case ATTACKING:
+                actualRegion = attackingAnimation.getKeyFrame(animationTimer, false);
                 break;
 
             case FALLING:

@@ -30,7 +30,7 @@ public class Enemy extends GameObject {
             )
         );
 
-        movingAnimation = makeAnimationByRegion(region, totalFrames, 0.5f);
+        movingAnimation = null;
 
         hitSound = loadSound("drop.wav");
     }
