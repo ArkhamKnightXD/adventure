@@ -44,9 +44,9 @@ public class Player extends GameObject {
         actualState = AnimationState.STANDING;
 
         jumpAnimation = makeAnimation(atlas.findRegion("jump"), 64, 64, 15, 0.1f);
-        idleAnimation = makeAnimation(atlas.findRegion("idle"), 64, 50, 4, 0.2f);
-        runningAnimation = makeAnimation(atlas.findRegion("run"), 80, 50, 8, 0.2f);
-        dyingAnimation = makeAnimation(atlas.findRegion("dead"), 80, 55, 8, 0.2f);
+        idleAnimation = makeAnimation(atlas.findRegion("idle"), 64, 50, 4, 0.1f);
+        runningAnimation = makeAnimation(atlas.findRegion("run"), 80, 50, 8, 0.1f);
+        dyingAnimation = makeAnimation(atlas.findRegion("dead"), 80, 55, 8, 0.1f);
         attackingAnimation = makeAnimation(atlas.findRegion("attack"), 96, 80, 8, 0.1f);
 
         jumpSound = loadSound("magic.wav");
